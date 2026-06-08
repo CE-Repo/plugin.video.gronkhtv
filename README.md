@@ -1,14 +1,24 @@
 # gronkh.tv plugin for Kodi
+Ein Kodi-Plugin für gronkh.tv.
 
-gronkhtv - ein KODI Plugin für gronkh.tv.
+## Features
 
-Git repo: https://github.com/CE-Repo/plugin.video.gronkhtv
+- **Die neusten Streams** — aktuellste VODs aus dem Archiv
+- **Achtung heiß!** — aktuell besonders beliebte Streams
+- **Wahllos ausgewählt** — zufällige Videos aus dem Archiv
+- **Top g'schaut** — die 40 meistgesehenen Videos aller Zeiten
+- **Live-Streams** — aktive Twitch-Streams von Gronkh und anderen
+- **Suche** — Volltextsuche im gesamten Videoarchiv
 
-_Diese Website und das Addon gehören nicht zu Gronkh.tv oder stehen in irgendeiner Beziehung zu ihnen._
+## Kapitelnavigation
 
+Für Videos mit Kapitelmarken erscheinen im Kontextmenü direkte Sprungpunkte, sodass man ohne Scrubbing an eine bestimmte Stelle im Stream springen kann.
 
-_Kodi® (früher bekannt als XBMC™) ist eine registrierte Marke (registered trademark) der XBMC Foundation.
-Diese Website steht in keiner Beziehung zu Kodi, Team Kodi doer der XBMC Foundation._
+## Voraussetzungen
 
-_Kodi® (formerly known as XBMC™) is a registered trademark of the XBMC Foundation.
-This website and addon is not affiliated with Kodi, Team Kodi, or the XBMC Foundation._
+- Kodi 19 (Matrix) oder neuer
+- Python 3
+
+---
+
+_Diese Website und das Addon gehören nicht zu Gronkh.tv und stehen in keiner Beziehung zu ihnen._
