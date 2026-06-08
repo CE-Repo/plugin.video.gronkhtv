@@ -7,7 +7,7 @@ Ein Kodi-Plugin für gronkh.tv.
 - **Achtung heiß!** — aktuell besonders beliebte Streams
 - **Wahllos ausgewählt** — zufällige Videos aus dem Archiv
 - **Top g'schaut** — die 40 meistgesehenen Videos aller Zeiten
-- **Live-Streams** — aktive Twitch-Streams von Gronkh und anderen
+- **Live-Streams** — aktive Twitch-Streams von Gronkh und Gronkh.tv die angeschaut werden können
 - **Suche** — Volltextsuche im gesamten Videoarchiv
 
 ## Kapitelnavigation
@@ -21,4 +21,4 @@ Für Videos mit Kapitelmarken erscheinen im Kontextmenü direkte Sprungpunkte, s
 
 ---
 
-_Diese Website und das Addon gehören nicht zu Gronkh.tv und stehen in keiner Beziehung zu ihnen._
+_Diese Repo und das Addon gehören nicht zu Gronkh.tv und stehen in keiner Beziehung zu ihnen._
