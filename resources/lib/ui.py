@@ -28,6 +28,7 @@ from .api import (
     category_label,
     get_backend_items,
     get_most_viewed_items,
+    get_newest_items,
     search_video_items,
 )
 from .constants import CATEGORIES, HANDLE
@@ -216,6 +217,20 @@ def build_video_list_item(video: Dict[str, Any]) -> Tuple[xbmcgui.ListItem, str]
 
 
 # ---------------------------------------------------------------------------
+# "Weiter"-navigation item for paginated listings
+# ---------------------------------------------------------------------------
+
+def add_next_page_item(backend: str, next_page: int, current_page: int, last_page: int) -> None:
+    """Append a navigation item that loads the next page of a paginated listing."""
+    label = f"Weiter - (Seite {next_page} von {last_page})"
+    item = xbmcgui.ListItem(label=label)
+    tag = set_video_tag_defaults(item, label)
+    tag.setTitle(label)
+    url = get_url(action="listing", backend=backend, page=next_page)
+    xbmcplugin.addDirectoryItem(HANDLE, url, item, True)
+
+
+# ---------------------------------------------------------------------------
 # Stream list item builder
 # ---------------------------------------------------------------------------
 
@@ -269,16 +284,24 @@ def build_stream_list_item(stream: Dict[str, Any]) -> Tuple[xbmcgui.ListItem, st
 # Directory listing functions
 # ---------------------------------------------------------------------------
 
-def list_items(backend: str) -> None:
+def list_items(backend: str, page: int = 1) -> None:
     xbmcplugin.setPluginCategory(HANDLE, category_label(backend))
     xbmcplugin.setContent(HANDLE, "videos")
 
-    if backend == "most_viewed":
+    if backend == "newest":
+        items, current_page, last_page = get_newest_items(page)
+    elif backend == "most_viewed":
         items = get_most_viewed_items()
+        current_page = 1
+        last_page = 1
     elif backend == "streams":
         items = get_backend_items(backend)
+        current_page = 1
+        last_page = 1
     else:
         items = get_backend_items(backend)
+        current_page = 1
+        last_page = 1
 
     if backend == "streams":
         for stream in items:
@@ -291,6 +314,10 @@ def list_items(backend: str) -> None:
 
     if not items:
         add_empty_item("Keine Einträge gefunden")
+
+    # Append "Weiter" navigation for paginated backends.
+    if current_page < last_page:
+        add_next_page_item(backend, current_page + 1, current_page, last_page)
 
     finish_directory()
 

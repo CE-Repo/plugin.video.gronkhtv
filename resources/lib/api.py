@@ -4,9 +4,9 @@ plugin.video.gronkhtv — API response normalisation and data accessors
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
-from .constants import BACKENDS, MOST_VIEWED_COUNT, SEARCH_ENDPOINT
+from .constants import BACKENDS, MOST_VIEWED_COUNT, SEARCH_ENDPOINT, SEARCH_PAGE_SIZE
 from .http import api_get, api_post_json, ensure_session
 from .utils import log, remove_emojis, safe_float, safe_int
 
@@ -37,6 +37,22 @@ def items_from_response(data: Any) -> List[Dict[str, Any]]:
         return [item for item in results["videos"] if isinstance(item, dict)]
 
     return []
+
+
+def pagination_from_response(data: Any) -> Tuple[int, int]:
+    """
+    Extract ``(current_page, last_page)`` from a paginated search response.
+
+    Returns ``(1, 1)`` if the response does not contain pagination metadata.
+    """
+    if not isinstance(data, dict):
+        return 1, 1
+    meta = data.get("meta")
+    if not isinstance(meta, dict):
+        return 1, 1
+    current = safe_int(meta.get("current_page"), 1)
+    last = safe_int(meta.get("last_page"), 1)
+    return current, last
 
 
 # ---------------------------------------------------------------------------
@@ -189,8 +205,34 @@ def backend_from_legacy_category(category: str) -> str:
 # ---------------------------------------------------------------------------
 
 def get_backend_items(backend: str) -> List[Dict[str, Any]]:
-    endpoint = BACKENDS.get(backend, BACKENDS["newest"])
+    endpoint = BACKENDS.get(backend, BACKENDS.get("hot", "videos/discovery/hot"))
     return items_from_response(api_get(endpoint))
+
+
+def get_newest_items(page: int = 1) -> Tuple[List[Dict[str, Any]], int, int]:
+    """
+    Fetch the newest streams page by page via ``POST /videos/search``.
+
+    Uses the same endpoint the gronkh.tv web frontend calls when loading
+    ``/streams/`` — ``POST /videos/search`` with ``order=created_at``,
+    ``dir=desc``, and an explicit page number.  This gives access to the full
+    archive (944+ videos) rather than just the small discovery feed.
+
+    Returns a tuple of ``(items, current_page, last_page)``.
+    """
+    payload: Dict[str, Any] = {
+        "order": "created_at",
+        "dir": "desc",
+        "page": safe_int(page, 1),
+    }
+    data = api_post_json(SEARCH_ENDPOINT, payload)
+    items = items_from_response(data)
+    current_page, last_page = pagination_from_response(data)
+    log(
+        f"get_newest_items: page={current_page}/{last_page}, "
+        f"got {len(items)} items"
+    )
+    return items, current_page, last_page
 
 
 def search_video_items(query: str, page: int = 1) -> List[Dict[str, Any]]:

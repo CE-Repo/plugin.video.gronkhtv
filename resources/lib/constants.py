@@ -44,13 +44,16 @@ ADDON_DATA_PATH = "special://profile/addon_data/plugin.video.gronkhtv"
 # ---------------------------------------------------------------------------
 
 BACKENDS: dict[str, str] = {
-    "newest": "videos/discovery/newest",
+    # "newest" is intentionally absent — it uses POST /videos/search, not a GET endpoint.
     "hot": "videos/discovery/hot",
     "random": "videos/discovery/random",
     "streams": "promoted/streams",
 }
 SEARCH_ENDPOINT = "videos/search"
 MOST_VIEWED_COUNT = 40
+
+# How many items the search endpoint returns per page (server-side constant).
+SEARCH_PAGE_SIZE = 20
 
 # ---------------------------------------------------------------------------
 # Twitch

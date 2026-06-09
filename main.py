@@ -32,7 +32,8 @@ def router(param_string: str) -> None:
         backend = params.get("backend") or backend_from_legacy_category(
             params.get("category", "")
         )
-        list_items(backend)
+        page = safe_int(params.get("page"), 1)
+        list_items(backend, page)
 
     elif action == "search":
         list_search(params.get("query", ""), safe_int(params.get("page"), 1))
